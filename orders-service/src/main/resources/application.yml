@@ -1,0 +1,38 @@
+server:
+  port: 8081
+
+spring:
+  application:
+    name: orders-service
+  datasource:
+    url: jdbc:h2:mem:ordersdb;DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=FALSE
+    driver-class-name: org.h2.Driver
+    username: sa
+    password:
+  jpa:
+    hibernate:
+      ddl-auto: update
+    show-sql: false
+    properties:
+      hibernate:
+        format_sql: true
+  h2:
+    console:
+      enabled: true
+      path: /h2-console
+
+---
+# Perfil cloud: activar con SPRING_PROFILES_ACTIVE=cloud
+spring:
+  config:
+    activate:
+      on-profile: cloud
+  datasource:
+    url: ${DB_URL:jdbc:postgresql://localhost:5432/pedidos360_orders}
+    username: ${DB_USER:pedidos360}
+    password: ${DB_PASSWORD:changeme}
+    driver-class-name: org.postgresql.Driver
+  jpa:
+    hibernate:
+      ddl-auto: update
+    database-platform: org.hibernate.dialect.PostgreSQLDialect

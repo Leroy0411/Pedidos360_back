@@ -1,0 +1,33 @@
+server:
+  port: 8080
+
+spring:
+  application:
+    name: bff-service
+
+# Reemplazar con los valores de tu tenant Azure AD (IDaaS)
+pedidos360:
+  security:
+    jwt:
+      issuer-uri: ${AZURE_ISSUER_URI:https://login.microsoftonline.com/TU-TENANT-ID/v2.0}
+      audiences:
+        - ${AZURE_API_AUDIENCE:api://TU-CLIENT-ID}
+        - ${AZURE_CLIENT_ID:TU-CLIENT-ID}
+      roles-claim: roles
+  cors:
+    allowed-origins: ${CORS_ORIGINS:http://localhost:4200}
+  downstream:
+    orders-url: ${ORDERS_SERVICE_URL:http://localhost:8081}
+    products-url: ${PRODUCTS_SERVICE_URL:http://localhost:8082}
+
+---
+spring:
+  config:
+    activate:
+      on-profile: cloud
+pedidos360:
+  downstream:
+    orders-url: ${ORDERS_SERVICE_URL:http://orders-service:8081}
+    products-url: ${PRODUCTS_SERVICE_URL:http://products-service:8082}
+  cors:
+    allowed-origins: ${CORS_ORIGINS:https://tu-frontend.cloudfront.net}
