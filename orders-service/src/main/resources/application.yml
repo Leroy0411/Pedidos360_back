@@ -1,9 +1,41 @@
 server:
   port: 8081
 
+pedidos360:
+  messaging:
+    exchanges:
+      events: pedidos360.events.topic
+      commands: pedidos360.commands.direct
+      dead: pedidos360.dead.direct
+    queues:
+      orders: pedidos360.orders.created
+      notifications: pedidos360.notifications.send
+      documents: pedidos360.documents.generate
+      orders-dlq: pedidos360.orders.dlq
+      notifications-dlq: pedidos360.notifications.dlq
+      documents-dlq: pedidos360.documents.dlq
+    routing:
+      orders: orders.created
+      notifications: notifications.send
+      documents: documents.generate
+      orders-dead: dead.orders
+      notifications-dead: dead.notifications
+      documents-dead: dead.documents
+
 spring:
   application:
     name: orders-service
+  rabbitmq:
+    addresses: ${RABBITMQ_ADDRESSES:localhost:5672}
+    username: ${RABBITMQ_USERNAME:pedidos360}
+    password: ${RABBITMQ_PASSWORD:local-only-change-me}
+    virtual-host: ${RABBITMQ_VHOST:/}
+    listener:
+      simple:
+        acknowledge-mode: manual
+        default-requeue-rejected: false
+    publisher-confirm-type: correlated
+    publisher-returns: true
   datasource:
     url: jdbc:h2:mem:ordersdb;DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=FALSE
     driver-class-name: org.h2.Driver

@@ -29,3 +29,5 @@ application-local.properties
 
 # Spring Boot
 spring-boot-devtools.properties
+.env
+deploy/.env

@@ -1,0 +1,20 @@
+server:
+  port: ${RABBIT_ADMIN_PORT:8083}
+  address: ${RABBIT_ADMIN_BIND:127.0.0.1}
+spring:
+  application:
+    name: rabbit-admin-service
+  rabbitmq:
+    addresses: ${RABBITMQ_ADDRESSES:localhost:5672}
+    username: ${RABBITMQ_USERNAME:pedidos360}
+    password: ${RABBITMQ_PASSWORD:local-only-change-me}
+    virtual-host: ${RABBITMQ_VHOST:/}
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health
+pedidos360:
+  admin:
+    username: ${RABBIT_ADMIN_USER:admin}
+    password: ${RABBIT_ADMIN_PASSWORD:change-this-before-deploy}

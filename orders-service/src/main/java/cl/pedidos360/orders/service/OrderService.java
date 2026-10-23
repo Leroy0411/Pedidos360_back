@@ -5,6 +5,7 @@ import cl.pedidos360.orders.dto.OrderResponse;
 import cl.pedidos360.orders.entity.Order;
 import cl.pedidos360.orders.entity.OrderStatus;
 import cl.pedidos360.orders.repository.OrderRepository;
+import cl.pedidos360.orders.messaging.OrderEventPublisher;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
@@ -15,9 +16,11 @@ import java.util.List;
 public class OrderService {
 
     private final OrderRepository orderRepository;
+    private final OrderEventPublisher events;
 
-    public OrderService(OrderRepository orderRepository) {
+    public OrderService(OrderRepository orderRepository, OrderEventPublisher events) {
         this.orderRepository = orderRepository;
+        this.events = events;
     }
 
     public List<OrderResponse> findAll() {
@@ -46,7 +49,9 @@ public class OrderService {
         order.setTotalAmount(request.totalAmount());
         order.setStatus(OrderStatus.PENDING);
 
-        return OrderResponse.from(orderRepository.save(order));
+        OrderResponse saved = OrderResponse.from(orderRepository.save(order));
+        events.orderCreated(saved);
+        return saved;
     }
 
     public OrderResponse confirm(Long id) {

@@ -1,0 +1,52 @@
+services:
+  rabbit1:
+    image: rabbitmq:4.1-management
+    hostname: rabbit1
+    restart: unless-stopped
+    environment:
+      RABBITMQ_ERLANG_COOKIE: ${RABBITMQ_ERLANG_COOKIE:?set_erlang_cookie}
+      RABBITMQ_DEFAULT_USER: ${RABBITMQ_USERNAME:?set_rabbit_user}
+      RABBITMQ_DEFAULT_PASS: ${RABBITMQ_PASSWORD:?set_rabbit_password}
+      RABBITMQ_NODENAME: rabbit@rabbit1
+    ports:
+      - "127.0.0.1:5672:5672"
+      - "127.0.0.1:15672:15672"
+    volumes:
+      - rabbit1_data:/var/lib/rabbitmq
+      - ./rabbitmq.conf:/etc/rabbitmq/rabbitmq.conf:ro
+    networks: [rabbit]
+    healthcheck:
+      test: ["CMD", "rabbitmq-diagnostics", "-q", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 12
+
+  rabbit2:
+    image: rabbitmq:4.1-management
+    hostname: rabbit2
+    restart: unless-stopped
+    depends_on: [rabbit1]
+    environment:
+      RABBITMQ_ERLANG_COOKIE: ${RABBITMQ_ERLANG_COOKIE:?set_erlang_cookie}
+      RABBITMQ_DEFAULT_USER: ${RABBITMQ_USERNAME:?set_rabbit_user}
+      RABBITMQ_DEFAULT_PASS: ${RABBITMQ_PASSWORD:?set_rabbit_password}
+      RABBITMQ_NODENAME: rabbit@rabbit2
+    ports:
+      - "127.0.0.1:5673:5672"
+      - "127.0.0.1:15673:15672"
+    volumes:
+      - rabbit2_data:/var/lib/rabbitmq
+      - ./rabbitmq.conf:/etc/rabbitmq/rabbitmq.conf:ro
+    networks: [rabbit]
+    healthcheck:
+      test: ["CMD", "rabbitmq-diagnostics", "-q", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 12
+
+networks:
+  rabbit:
+    driver: bridge
+volumes:
+  rabbit1_data:
+  rabbit2_data:
