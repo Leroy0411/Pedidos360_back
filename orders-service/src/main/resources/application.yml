@@ -1,7 +1,11 @@
-server:
+﻿server:
   port: 8081
 
 pedidos360:
+  kafka:
+    topics:
+      orders: pedidos360.orders.events
+      inventory: pedidos360.inventory.events
   messaging:
     exchanges:
       events: pedidos360.events.topic
@@ -25,6 +29,21 @@ pedidos360:
 spring:
   application:
     name: orders-service
+  kafka:
+    bootstrap-servers: ${KAFKA_BOOTSTRAP_SERVERS:localhost:29092,localhost:29093,localhost:29094}
+    producer:
+      key-serializer: org.apache.kafka.common.serialization.StringSerializer
+      value-serializer: org.springframework.kafka.support.serializer.JsonSerializer
+      acks: all
+      properties:
+        enable.idempotence: true
+    consumer:
+      group-id: orders-audit-group
+      auto-offset-reset: earliest
+      key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+      value-deserializer: org.springframework.kafka.support.serializer.JsonDeserializer
+      properties:
+        spring.json.trusted.packages: "cl.pedidos360.*"
   rabbitmq:
     addresses: ${RABBITMQ_ADDRESSES:localhost:5672}
     username: ${RABBITMQ_USERNAME:pedidos360}
@@ -54,7 +73,6 @@ spring:
       path: /h2-console
 
 ---
-# Perfil cloud: activar con SPRING_PROFILES_ACTIVE=cloud
 spring:
   config:
     activate:

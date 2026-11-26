@@ -1,17 +1,10 @@
-package cl.pedidos360.bff.controller;
+﻿package cl.pedidos360.bff.controller;
 
 import cl.pedidos360.bff.service.DownstreamService;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.oauth2.jwt.Jwt;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.Map;
@@ -26,16 +19,28 @@ public class OrderBffController {
         this.downstreamService = downstreamService;
     }
 
+    private String resolveEmail(Jwt jwt) {
+        for (String claim : List.of("preferred_username", "email", "cognito:username")) {
+            String val = jwt.getClaimAsString(claim);
+            if (val != null && !val.isBlank()) return val;
+        }
+        return jwt.getSubject();
+    }
+
+    private boolean isAdmin(Jwt jwt) {
+        List<String> roles = jwt.getClaimAsStringList("roles");
+        List<String> groups = jwt.getClaimAsStringList("cognito:groups");
+        return (roles != null && roles.stream().anyMatch(r -> r.equalsIgnoreCase("ADMIN")))
+                || (groups != null && groups.stream().anyMatch(g -> g.equalsIgnoreCase("ADMIN")));
+    }
+
     @GetMapping
     @PreAuthorize("hasAnyRole('USER','ADMIN')")
-    public List<Map<String, Object>> list(
+    public List> list(
             @AuthenticationPrincipal Jwt jwt,
             @RequestParam(required = false) String customerEmail
     ) {
-        boolean isAdmin = jwt.getClaimAsStringList("roles") != null
-                && jwt.getClaimAsStringList("roles").contains("ADMIN");
-
-        String emailFilter = isAdmin ? customerEmail : jwt.getClaimAsString("preferred_username");
+        String emailFilter = isAdmin(jwt) ? customerEmail : resolveEmail(jwt);
         return downstreamService.listOrders(emailFilter);
     }
 
@@ -51,7 +56,7 @@ public class OrderBffController {
             @AuthenticationPrincipal Jwt jwt,
             @RequestBody Map<String, Object> body
     ) {
-        body.put("customerEmail", jwt.getClaimAsString("preferred_username"));
+        body.put("customerEmail", resolveEmail(jwt));
         return downstreamService.createOrder(body);
     }
 

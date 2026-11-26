@@ -1,9 +1,29 @@
-server:
+﻿server:
   port: 8082
+
+pedidos360:
+  kafka:
+    topics:
+      inventory: pedidos360.inventory.events
+      confirmed: pedidos360.inventory.confirmed
 
 spring:
   application:
     name: products-service
+  kafka:
+    bootstrap-servers: ${KAFKA_BOOTSTRAP_SERVERS:localhost:29092,localhost:29093,localhost:29094}
+    producer:
+      key-serializer: org.apache.kafka.common.serialization.StringSerializer
+      value-serializer: org.springframework.kafka.support.serializer.JsonSerializer
+    consumer:
+      group-id: products-inventory-group
+      auto-offset-reset: earliest
+      key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+      value-deserializer: org.springframework.kafka.support.serializer.JsonDeserializer
+      properties:
+        spring.json.trusted.packages: "cl.pedidos360.*"
+        spring.json.use.type.headers: false
+        spring.json.value.default.type: "cl.pedidos360.products.dto.OrderKafkaEvent"
   datasource:
     url: jdbc:h2:mem:productsdb;DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=FALSE
     driver-class-name: org.h2.Driver

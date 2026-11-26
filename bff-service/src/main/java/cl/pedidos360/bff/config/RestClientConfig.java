@@ -1,4 +1,4 @@
-package cl.pedidos360.bff.config;
+﻿package cl.pedidos360.bff.config;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
@@ -10,15 +10,16 @@ public class RestClientConfig {
 
     @Bean(name = "ordersRestClient")
     RestClient ordersRestClient(@Value("${pedidos360.downstream.orders-url}") String baseUrl) {
-        return RestClient.builder()
-                .baseUrl(baseUrl)
-                .build();
+        return RestClient.builder().baseUrl(baseUrl).build();
     }
 
     @Bean(name = "productsRestClient")
     RestClient productsRestClient(@Value("${pedidos360.downstream.products-url}") String baseUrl) {
-        return RestClient.builder()
-                .baseUrl(baseUrl)
-                .build();
+        return RestClient.builder().baseUrl(baseUrl).build();
+    }
+
+    @Bean(name = "kafkaAdminRestClient")
+    RestClient kafkaAdminRestClient(@Value("${pedidos360.downstream.kafka-admin-url:http://localhost:8084}") String baseUrl) {
+        return RestClient.builder().baseUrl(baseUrl).build();
     }
 }
