@@ -1,4 +1,4 @@
-﻿package cl.pedidos360.bff.controller;
+package cl.pedidos360.bff.controller;
 
 import cl.pedidos360.bff.service.DownstreamService;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -36,7 +36,7 @@ public class OrderBffController {
 
     @GetMapping
     @PreAuthorize("hasAnyRole('USER','ADMIN')")
-    public List> list(
+    public List<Map<String, Object>> list(
             @AuthenticationPrincipal Jwt jwt,
             @RequestParam(required = false) String customerEmail
     ) {

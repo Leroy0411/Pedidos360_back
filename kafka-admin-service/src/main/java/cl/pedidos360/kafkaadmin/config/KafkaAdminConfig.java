@@ -1,4 +1,4 @@
-﻿package cl.pedidos360.kafkaadmin.config;
+package cl.pedidos360.kafkaadmin.config;
 
 import org.apache.kafka.clients.admin.AdminClient;
 import org.apache.kafka.clients.admin.AdminClientConfig;

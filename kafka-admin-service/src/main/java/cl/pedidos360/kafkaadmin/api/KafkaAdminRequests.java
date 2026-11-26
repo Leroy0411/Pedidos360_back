@@ -1,4 +1,4 @@
-﻿package cl.pedidos360.kafkaadmin.api;
+package cl.pedidos360.kafkaadmin.api;
 
 import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.Min;

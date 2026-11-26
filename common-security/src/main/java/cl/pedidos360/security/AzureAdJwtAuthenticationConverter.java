@@ -1,4 +1,4 @@
-﻿package cl.pedidos360.security;
+package cl.pedidos360.security;
 
 import org.springframework.core.convert.converter.Converter;
 import org.springframework.security.authentication.AbstractAuthenticationToken;

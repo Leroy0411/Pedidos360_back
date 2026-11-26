@@ -1,4 +1,4 @@
-﻿package cl.pedidos360.bff.controller;
+package cl.pedidos360.bff.controller;
 
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.core.ParameterizedTypeReference;
@@ -25,12 +25,12 @@ public class KafkaAdminBffController {
     }
 
     @GetMapping("/topics")
-    public List> listTopics() {
+    public List<Map<String, Object>> listTopics() {
         return kafkaAdminRestClient.get().uri("/api/kafka-admin/topics").retrieve().body(new ParameterizedTypeReference<>() {});
     }
 
     @PostMapping("/topics")
-    public ResponseEntity> createTopic(@RequestBody Map<String, Object> body) {
+    public ResponseEntity<Map<String, Object>> createTopic(@RequestBody Map<String, Object> body) {
         Map<String, Object> res = kafkaAdminRestClient.post().uri("/api/kafka-admin/topics").body(body).retrieve().body(new ParameterizedTypeReference<>() {});
         return ResponseEntity.status(201).body(res);
     }
@@ -47,7 +47,7 @@ public class KafkaAdminBffController {
     }
 
     @GetMapping("/consumer-groups")
-    public List> listConsumerGroups() {
+    public List<Map<String, Object>> listConsumerGroups() {
         return kafkaAdminRestClient.get().uri("/api/kafka-admin/consumer-groups").retrieve().body(new ParameterizedTypeReference<>() {});
     }
 }

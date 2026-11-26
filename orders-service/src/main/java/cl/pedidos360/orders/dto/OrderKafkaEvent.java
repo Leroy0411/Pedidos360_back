@@ -1,4 +1,4 @@
-﻿package cl.pedidos360.orders.dto;
+package cl.pedidos360.orders.dto;
 
 import java.math.BigDecimal;
 import java.time.Instant;

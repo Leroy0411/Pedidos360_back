@@ -1,4 +1,4 @@
-﻿package cl.pedidos360.orders.config;
+package cl.pedidos360.orders.config;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

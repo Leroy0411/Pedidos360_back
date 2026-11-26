@@ -1,4 +1,4 @@
-﻿package cl.pedidos360.kafkaadmin.api;
+package cl.pedidos360.kafkaadmin.api;
 
 import cl.pedidos360.kafkaadmin.api.KafkaAdminRequests.CreateTopicRequest;
 import cl.pedidos360.kafkaadmin.api.KafkaAdminRequests.UpdateTopicRequest;
@@ -61,7 +61,7 @@ public class KafkaAdminController {
     }
 
     @ExceptionHandler(Exception.class)
-    public ResponseEntity> handleError(Exception ex) {
+    public ResponseEntity<Map<String, String>> handleError(Exception ex) {
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(Map.of("error", ex.getMessage()));
     }
 }

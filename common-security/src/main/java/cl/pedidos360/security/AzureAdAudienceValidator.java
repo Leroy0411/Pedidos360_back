@@ -1,4 +1,4 @@
-﻿package cl.pedidos360.security;
+package cl.pedidos360.security;
 
 import org.springframework.security.oauth2.core.OAuth2Error;
 import org.springframework.security.oauth2.core.OAuth2TokenValidator;

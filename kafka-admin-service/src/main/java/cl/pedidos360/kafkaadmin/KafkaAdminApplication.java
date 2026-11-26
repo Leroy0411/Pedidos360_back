@@ -1,4 +1,4 @@
-﻿package cl.pedidos360.kafkaadmin;
+package cl.pedidos360.kafkaadmin;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;

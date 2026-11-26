@@ -1,4 +1,4 @@
-﻿package cl.pedidos360.orders.messaging;
+package cl.pedidos360.orders.messaging;
 
 import cl.pedidos360.orders.dto.OrderKafkaEvent;
 import cl.pedidos360.orders.dto.OrderResponse;
